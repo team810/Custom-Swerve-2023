@@ -21,19 +21,25 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static  final double MaxSpeed = .25;
+    public final class Auto
+    {
+        public static final String dir_path = "";
+        public static final double MaxSpeed = 4.5;
+        public static final double TurningSpeed = .5; // How long in seconds it takes to make one turn in place
+
+    }
+
     /*
      * Vendor deps:
      * Rev: https://software-metadata.revrobotics.com/REVLib.json
      * NavX: https://www.kauailabs.com/dist/frc/2022/navx_frc.json
      */
     // Robot stats
-    public static final double LENGTH_TO_WHEELS = 0.381;
-    public static final double WIDTH_TO_WHEELS = 0.381;
-
     public static final double kEncoderResolution = 414.1666667;// 596.4
-
+    //    public static final double kEncoderResolution = 415.0;
     public static final double GEAR_RATIO = 6.67;
-    public static final double CIRCUMFERENCE = 4 * Math.PI;
+    public static final double CIRCUMFERENCE = 4.0 * Math.PI;
     public static final double MAX_VELOCITY = 5; // units: m/s
 
     // CAN ID
@@ -70,15 +76,21 @@ public final class Constants {
     // Distance between front and back wheels on robot
 
     public static final double kWheelBase = 0.66;
-    public static final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
-            new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-            new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-            new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
-            new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
+    //    public static final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
+//            new Translation2d(kTrackWidth / 2, kWheelBase / 2), // FL
+//            new Translation2d(-kTrackWidth / 2, kWheelBase / 2), // FR
+//            new Translation2d(-kTrackWidth / 2, -kWheelBase / 2), // BL
+//            new Translation2d(kTrackWidth / 2, -kWheelBase / 2)); // BR
+    public static final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
+            new Translation2d(kWheelBase / 2, kTrackWidth / 2), // FL
+            new Translation2d(kWheelBase / 2, -kTrackWidth / 2), // FR
+            new Translation2d(-kWheelBase / 2, kTrackWidth / 2), // BL // differnet in the video that I found.
+            new Translation2d(-kWheelBase / 2, -kTrackWidth / 2)); // BR
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
             kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     public static final double kpDriveVel = 2.7066;
+
 
     public static final class OIConstants {
         public static final int kDriverControllerPort = 1;
@@ -88,7 +100,9 @@ public final class Constants {
         public static final int kDriverRotAxis = 2;
         public static final int kDriverFieldOrientedButtonIdx = 1;
 
-        public static final double kDeadband = 0.05;
+        public static final double kDeadband = 0.1;
     }
+
+
 
 }
