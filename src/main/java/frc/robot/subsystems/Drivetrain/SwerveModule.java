@@ -2,12 +2,11 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.Drivetrain;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -15,7 +14,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc.robot.Constants;
-import java.lang.Math;
 
 /** Add your docs here. */
 public class SwerveModule {
@@ -48,11 +46,12 @@ public class SwerveModule {
                 Units.inchesToMeters(Constants.CIRCUMFERENCE) / (60.0 * Constants.GEAR_RATIO));
         // driveEncoder.setVelocityConversionFactor();
         // turningEncoder.setDistancePerPulse(360 / Constants.kEncoderResolution);
-        turningEncoder.setDistancePerPulse(Math.PI * 2 / Constants.kEncoderResolution);
 
-        turningPidController = new PIDController(0.4, 0, 0);
+        turningEncoder.setDistancePerPulse(Math.PI * 2.0 / Constants.kEncoderResolution);
+
+        turningPidController = new PIDController(5, 0, 0);
         // SASHA'S NOTES: encoder distance will be in radians
-        turningPidController.setTolerance(Math.PI * 5 / 180);
+        turningPidController.setTolerance(Math.PI * 1.0 / 180);
         turningPidController.enableContinuousInput(-Math.PI, Math.PI);
 
         resetEncoders();
@@ -90,7 +89,7 @@ public class SwerveModule {
     }
 
     public void setDesiredState(SwerveModuleState state) {
-        //state = SwerveModuleState.optimize(state, getState().angle);
+        state = SwerveModuleState.optimize(state, getState().angle);
         tmp = (tmp + 1) % 100;
         double speed = turningPidController.calculate(getTurningPosition(), state.angle.getRadians());
         if(tmp % 100 == 0)
@@ -99,7 +98,7 @@ public class SwerveModule {
             System.out.println("CURR: " + getTurningPosition());
             System.out.println("Target: " + state.angle.getRadians());
             System.out.println("CALC_speed: " + speed);
-            System.out.println("emcpder: " + turningEncoder.getDistance());
+            System.out.println("ember: " + turningEncoder.getDistance());
         }
         driveMotor.set(state.speedMetersPerSecond);
         turningMotor.set(speed);
@@ -115,7 +114,7 @@ public class SwerveModule {
         return getState().angle;
     }
 
-    private void resetEncoders() {
+    public void resetEncoders() {
         turningEncoder.reset();
         driveEncoder.setPosition(0);
     }
