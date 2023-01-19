@@ -35,8 +35,7 @@ public class SwerveDriveKinematics extends CommandBase {
 
   @Override
   public void initialize() {
-    swerveSubsystem.Zero();
-    swerveSubsystem.ResetEncoders();
+
   }
 
   public void ResetEncoder()
@@ -83,6 +82,7 @@ public class SwerveDriveKinematics extends CommandBase {
 
     SwerveModuleState[] moduleStates = Constants.m_kinematics.toSwerveModuleStates(chassisSpeeds);
     swerveSubsystem.setModuleStates(moduleStates);
+
   }
   @Override
   public void end(boolean interrupted) {

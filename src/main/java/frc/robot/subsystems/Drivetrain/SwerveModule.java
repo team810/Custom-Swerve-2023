@@ -15,10 +15,8 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc.robot.Constants;
 
-/** Add your docs here. */
 public class SwerveModule {
     private int tmp;
-
     private Spark turningMotor;
     private CANSparkMax driveMotor;
 
@@ -28,8 +26,13 @@ public class SwerveModule {
 
     private PIDController turningPidController;
 
+    public PIDController GetPIDTurning()
+    {
+        return turningPidController;
+    }
+
     public SwerveModule(Drivetrain d, int driveChannel, int turnChannel, int channel1, int channel2,
-            boolean driveMotorReversed, boolean turningMotorReversed) {
+            boolean driveMotorReversed, boolean turningMotorReversed, double EncoderResolution) {
         tmp = 0;
         turningMotor = new Spark(turnChannel);
         driveMotor = new CANSparkMax(driveChannel, MotorType.kBrushless);
@@ -37,6 +40,7 @@ public class SwerveModule {
         turningMotor.setInverted(turningMotorReversed);
         driveMotor.setInverted(driveMotorReversed);
 
+        
         resetMotors();
 
         turningEncoder = new Encoder(channel2, channel1);
@@ -47,9 +51,14 @@ public class SwerveModule {
         // driveEncoder.setVelocityConversionFactor();
         // turningEncoder.setDistancePerPulse(360 / Constants.kEncoderResolution);
 
-        turningEncoder.setDistancePerPulse(Math.PI * 2.0 / Constants.kEncoderResolution);
+        turningEncoder.setDistancePerPulse(Math.PI * 2.0 / EncoderResolution);
 
-        turningPidController = new PIDController(5, 0, 0);
+        if (driveChannel == 0)
+        {
+            turningPidController = new PIDController(100,0,0);
+        }else{
+            turningPidController = new PIDController(5, 0, 0);
+        }
         // SASHA'S NOTES: encoder distance will be in radians
         turningPidController.setTolerance(Math.PI * 1.0 / 180);
         turningPidController.enableContinuousInput(-Math.PI, Math.PI);
@@ -122,5 +131,10 @@ public class SwerveModule {
     private void resetMotors() {
         driveMotor.restoreFactoryDefaults();
         turningMotor.setSafetyEnabled(false);
+    }
+
+    public Encoder GetEncoder()
+    {
+        return turningEncoder;
     }
 }

@@ -5,6 +5,8 @@
 package frc.robot.subsystems.Drivetrain;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.SparkMaxRelativeEncoder;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -28,30 +30,34 @@ public class Drivetrain extends SubsystemBase {
   //Odometry
   SwerveDriveOdometry odometry;
 
+
   public Drivetrain() {
     frontRight = new SwerveModule(this,
       Constants.FRONT_RIGHT_CAN,
       Constants.FRONT_RIGHT,
       Constants.FRONT_RIGHT_PORT_1,
-      Constants.FRONT_RIGHT_PORT_2, false, false);
+      Constants.FRONT_RIGHT_PORT_2, false, false,
+    Constants.kEncoderResolution);
 
     frontLeft = new SwerveModule(this,
       Constants.FRONT_LEFT_CAN,
       Constants.FRONT_LEFT,
       Constants.FRONT_LEFT_PORT_1,
-      Constants.FRONT_LEFT_PORT_2,  false, false);
+      Constants.FRONT_LEFT_PORT_2,  false, false, 1105);
 
     backRight = new SwerveModule(this,
       Constants.BACK_RIGHT_CAN,
       Constants.BACK_RIGHT,
       Constants.BACK_RIGHT_PORT_1,
-      Constants.BACK_RIGHT_PORT_2, false, false);
+      Constants.BACK_RIGHT_PORT_2, false, false,
+            Constants.kEncoderResolution);
 
     backLeft = new SwerveModule(this,
       Constants.BACK_LEFT_CAN,
       Constants.BACK_LEFT,
       Constants.BACK_LEFT_PORT_1,
-      Constants.BACK_LEFT_PORT_2,  false, false);
+      Constants.BACK_LEFT_PORT_2,  false, false,
+            Constants.kEncoderResolution);
 
       gyro = new AHRS(SPI.Port.kMXP);
       gyro.reset();
@@ -112,6 +118,10 @@ public class Drivetrain extends SubsystemBase {
         gyro.zeroYaw();
     }
 
+    public void Lock_Motor()
+    {
+
+    }
     public void ResetEncoders()
     {
         frontLeft.resetEncoders();
@@ -119,11 +129,14 @@ public class Drivetrain extends SubsystemBase {
         backLeft.resetEncoders();
         backRight.resetEncoders();
     }
+
+    public Pose2d GetPos()
+    {
+        return odometry.getPoseMeters();
+    }
   @Override
   public void periodic() {
-
-    // This method will be called once per scheduler run
-
+      //System.out.println(frontLeft.GetEncoder().get());
 
 //    SmartDashboard.putNumber("Back Right Speed", backRight.getDriveVelocity());
 //    SmartDashboard.putNumber("Back Left Speed", backLeft.getDriveVelocity());
