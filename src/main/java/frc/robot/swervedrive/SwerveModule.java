@@ -2,11 +2,12 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.Drivetrain;
+package frc.robot.swervedrive;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -14,6 +15,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc.robot.Constants;
+import frc.robot.subsystems.Drivetrain;
 
 public class SwerveModule {
     private int tmp;
@@ -22,6 +24,7 @@ public class SwerveModule {
 
     // private Encoder turningEncoder;
     private Encoder turningEncoder;
+    private SparkMaxAbsoluteEncoder maxAbsoluteEncoder;
     private RelativeEncoder driveEncoder;
 
     private PIDController turningPidController;
@@ -31,8 +34,8 @@ public class SwerveModule {
         return turningPidController;
     }
 
-    public SwerveModule(Drivetrain d, int driveChannel, int turnChannel, int channel1, int channel2,
-            boolean driveMotorReversed, boolean turningMotorReversed, double EncoderResolution) {
+    public SwerveModule( int driveChannel, int turnChannel, int channel1, int channel2,
+                        boolean driveMotorReversed, boolean turningMotorReversed, double EncoderResolution) {
         tmp = 0;
         turningMotor = new Spark(turnChannel);
         driveMotor = new CANSparkMax(driveChannel, MotorType.kBrushless);
@@ -40,7 +43,6 @@ public class SwerveModule {
         turningMotor.setInverted(turningMotorReversed);
         driveMotor.setInverted(driveMotorReversed);
 
-        
         resetMotors();
 
         turningEncoder = new Encoder(channel2, channel1);
@@ -53,17 +55,22 @@ public class SwerveModule {
 
         turningEncoder.setDistancePerPulse(Math.PI * 2.0 / EncoderResolution);
 
-        if (driveChannel == 0)
-        {
-            turningPidController = new PIDController(100,0,0);
-        }else{
-            turningPidController = new PIDController(5, 0, 0);
-        }
+
+
+
+        turningPidController = new PIDController(5, 0, 0);
+
         // SASHA'S NOTES: encoder distance will be in radians
         turningPidController.setTolerance(Math.PI * 1.0 / 180);
         turningPidController.enableContinuousInput(-Math.PI, Math.PI);
-
-        resetEncoders();
+    }
+    public void Lock()
+    {
+        driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    }
+    public void Unlock()
+    {
+        driveMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
     }
 
     public double getDrivePosition() {

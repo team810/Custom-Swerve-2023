@@ -2,22 +2,21 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.Drivetrain;
+package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.revrobotics.SparkMaxRelativeEncoder;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.swervedrive.SwerveModule;
 
 public class Drivetrain extends SubsystemBase {
-  /** Creates a new Drivetrain. */
   public final SwerveModule frontLeft;
   public final SwerveModule frontRight;
   public final SwerveModule backLeft;
@@ -32,27 +31,27 @@ public class Drivetrain extends SubsystemBase {
 
 
   public Drivetrain() {
-    frontRight = new SwerveModule(this,
+    frontRight = new SwerveModule(
       Constants.FRONT_RIGHT_CAN,
       Constants.FRONT_RIGHT,
       Constants.FRONT_RIGHT_PORT_1,
       Constants.FRONT_RIGHT_PORT_2, false, false,
     Constants.kEncoderResolution);
 
-    frontLeft = new SwerveModule(this,
+    frontLeft = new SwerveModule(
       Constants.FRONT_LEFT_CAN,
       Constants.FRONT_LEFT,
       Constants.FRONT_LEFT_PORT_1,
       Constants.FRONT_LEFT_PORT_2,  false, false, 1105);
 
-    backRight = new SwerveModule(this,
+    backRight = new SwerveModule(
       Constants.BACK_RIGHT_CAN,
       Constants.BACK_RIGHT,
       Constants.BACK_RIGHT_PORT_1,
       Constants.BACK_RIGHT_PORT_2, false, false,
             Constants.kEncoderResolution);
 
-    backLeft = new SwerveModule(this,
+    backLeft = new SwerveModule(
       Constants.BACK_LEFT_CAN,
       Constants.BACK_LEFT,
       Constants.BACK_LEFT_PORT_1,
@@ -103,6 +102,7 @@ public class Drivetrain extends SubsystemBase {
 
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         // SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.kMaxSpeedMetersPerSecond);
+
         modulePositions[0] = new SwerveModulePosition(desiredStates[0].speedMetersPerSecond, desiredStates[0].angle);
         modulePositions[1] = new SwerveModulePosition(desiredStates[1].speedMetersPerSecond, desiredStates[1].angle);
         modulePositions[2] = new SwerveModulePosition(desiredStates[2].speedMetersPerSecond, desiredStates[2].angle);
@@ -120,7 +120,17 @@ public class Drivetrain extends SubsystemBase {
 
     public void Lock_Motor()
     {
-
+        frontRight.Lock();
+        frontLeft.Lock();
+        backLeft.Lock();
+        backRight.Lock();
+    }
+    public void Unlock()
+    {
+        frontLeft.Unlock();
+        frontRight.Unlock();
+        backLeft.Unlock();
+        backRight.Unlock();
     }
     public void ResetEncoders()
     {
@@ -136,6 +146,8 @@ public class Drivetrain extends SubsystemBase {
     }
   @Override
   public void periodic() {
+      odometry.update(gyro.getRotation2d(), modulePositions);
+
       //System.out.println(frontLeft.GetEncoder().get());
 
 //    SmartDashboard.putNumber("Back Right Speed", backRight.getDriveVelocity());

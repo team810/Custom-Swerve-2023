@@ -22,12 +22,12 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
  */
 public final class Constants {
     public static  final double MaxSpeed = .25;
-    public static final double MaxTurnSpeed = .75;
+    public static final double MaxTurnSpeed = .75; // deggres per second
     public final class Auto
     {
         public static final String dir_path = "";
-        public static final double MaxSpeed = 4.5;
-        public static final double TurningSpeed = .5; // How long in seconds it takes to make one turn in place
+        public static final double MaxSpeed = 4;
+        public static final double TurningSpeed = 20; // How long in seconds it takes to make one turn in place
 
         public final double FieldLength = 15.6;
 

@@ -1,6 +1,5 @@
-package frc.robot.commands.Drivetrain;
+package frc.robot.swervedrive;
 
-import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -12,26 +11,23 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
-import frc.robot.subsystems.Drivetrain.Drivetrain;
+import frc.robot.commands.DrivetrainCommand;
+import frc.robot.subsystems.Drivetrain;
 
 
-import javax.annotation.processing.RoundEnvironment;
-import java.awt.geom.Line2D;
-import java.math.RoundingMode;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 
 
 public class DriveAuto {
 
     private final Drivetrain drivetrain;
-    Supplier<SwerveDriveKinematics> Drive;
+    Supplier<DrivetrainCommand> Drive;
     Command[] List = new Command[100];
 
     java.util.List<PathPlannerTrajectory> TerjectoryList;
     String Path;
     int Size = 0;
-    public DriveAuto(String Path, Supplier<SwerveDriveKinematics> swerveDriveKinematics, Drivetrain drivetrain)
+    public DriveAuto(String Path, Supplier<DrivetrainCommand> swerveDriveKinematics, Drivetrain drivetrain)
     {
         this.Drive = swerveDriveKinematics;
         this.Path = Path;
