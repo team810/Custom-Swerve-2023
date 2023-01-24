@@ -69,6 +69,7 @@ public class Drivetrain extends SubsystemBase {
       odometry = new SwerveDriveOdometry(Constants.m_kinematics,gyro.getRotation2d(), modulePositions);
 
       resetOdometry(getPose());
+      Unlock();
   }
 
   public void zeroHeading() {
@@ -140,7 +141,7 @@ public class Drivetrain extends SubsystemBase {
         backRight.resetEncoders();
     }
 
-    public Pose2d GetPos()
+    public Pose2d getpos()
     {
         return odometry.getPoseMeters();
     }

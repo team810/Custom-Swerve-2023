@@ -37,15 +37,6 @@ public class DrivetrainCommand extends CommandBase {
 
   }
 
-  public void ResetEncoder()
-  {
-    swerveSubsystem.ResetEncoders();
-  }
-
-  public void ZeroGryo()
-  {
-    swerveSubsystem.Zero();
-  }
 
   @Override
   public void execute()
