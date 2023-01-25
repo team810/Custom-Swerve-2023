@@ -21,9 +21,9 @@ public class RobotContainer {
   public RobotContainer() {
     m_drivetrain.setDefaultCommand(new DrivetrainCommand(
             m_drivetrain,
-            right::getY, // Y
-            right::getX, // X
-            left::getTwist, // Z
+            () -> -1 * right.getX() * Constants.MaxSpeed, // Y
+            () -> right.getY() * Constants.MaxSpeed, // X
+            () -> -1 * left.getTwist(), // Z
             () -> {
               return true;
             } // Feild Orinted

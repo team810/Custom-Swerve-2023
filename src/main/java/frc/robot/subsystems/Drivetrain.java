@@ -7,14 +7,12 @@ package frc.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.swervedrive.SwerveModule;
 
 public class Drivetrain extends SubsystemBase {
   public final SwerveModule frontLeft;
@@ -67,7 +65,7 @@ public class Drivetrain extends SubsystemBase {
       modulePositions[3] = new SwerveModulePosition(backRight.getDrivePosition(),backRight.getAngle());
 
       odometry = new SwerveDriveOdometry(Constants.m_kinematics,gyro.getRotation2d(), modulePositions);
-
+      ResetEncoders();
       resetOdometry(getPose());
       Unlock();
   }
