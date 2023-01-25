@@ -55,8 +55,8 @@ public class DrivetrainCommand extends CommandBase {
     turningSpeed = Math.abs(turningSpeed) > Constants.OIConstants.kDeadband ? turningSpeed : 0.0;
 
 //    // // 3. Make the driving smoother
-     xSpeed = xLimiter.calculate(xSpeed) * Constants.kMaxSpeedMetersPerSecond;
-     ySpeed = yLimiter.calculate(ySpeed) * Constants.kMaxSpeedMetersPerSecond;
+     xSpeed = xLimiter.calculate(xSpeed);
+     ySpeed = yLimiter.calculate(ySpeed);
      turningSpeed = turningLimiter.calculate(turningSpeed);
     //     * Constants.kMaxAngularSpeedRadiansPerSecondSquared;
 
