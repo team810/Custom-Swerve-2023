@@ -46,10 +46,10 @@ public class SwerveModule {
         resetMotors();
 
         turningEncoder = new Encoder(channel2, channel1);
-        driveEncoder = driveMotor.getEncoder();
+//        driveEncoder = driveMotor.getEncoder();
 
-        driveEncoder.setPositionConversionFactor(
-                Units.inchesToMeters(Constants.CIRCUMFERENCE) / (60.0 * Constants.GEAR_RATIO));
+//        driveEncoder.setPositionConversionFactor(
+//                Units.inchesToMeters(Constants.CIRCUMFERENCE) / (60.0 * Constants.GEAR_RATIO));
         // driveEncoder.setVelocityConversionFactor();
         // turningEncoder.setDistancePerPulse(360 / Constants.kEncoderResolution);
 
@@ -57,8 +57,8 @@ public class SwerveModule {
 
 
 
-
         turningPidController = new PIDController(5, 0, 0);
+
 
         // SASHA'S NOTES: encoder distance will be in radians
         turningPidController.setTolerance(Math.PI * 1.0 / 180);
@@ -73,9 +73,9 @@ public class SwerveModule {
         driveMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
     }
 
-    public double getDrivePosition() {
-        return driveEncoder.getPosition();
-    }
+//    public double getDrivePosition() {
+//        return driveEncoder.getPosition();
+//    }
 
     public double getDriveVelocity() {
         return driveEncoder.getVelocity();
@@ -101,7 +101,7 @@ public class SwerveModule {
     }
 
     public SwerveModuleState getState() {
-        return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurningPosition()));
+        return new SwerveModuleState(0, new Rotation2d(getTurningPosition()));
     }
 
     public void setDesiredState(SwerveModuleState state) {
@@ -132,7 +132,7 @@ public class SwerveModule {
 
     public void resetEncoders() {
         turningEncoder.reset();
-        driveEncoder.setPosition(0);
+//        driveEncoder.setPosition(0);
     }
 
     private void resetMotors() {
@@ -140,8 +140,4 @@ public class SwerveModule {
         turningMotor.setSafetyEnabled(false);
     }
 
-    public Encoder GetEncoder()
-    {
-        return turningEncoder;
-    }
 }

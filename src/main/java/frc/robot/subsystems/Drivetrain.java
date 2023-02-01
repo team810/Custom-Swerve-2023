@@ -59,24 +59,17 @@ public class Drivetrain extends SubsystemBase {
       gyro = new AHRS(SPI.Port.kMXP);
       gyro.reset();
 
-      modulePositions[0] = new SwerveModulePosition(frontLeft.getDrivePosition(),frontLeft.getAngle());
-      modulePositions[1] = new SwerveModulePosition(frontRight.getDrivePosition(),frontRight.getAngle());
-      modulePositions[2] = new SwerveModulePosition(backLeft.getDrivePosition(),backLeft.getAngle());
-      modulePositions[3] = new SwerveModulePosition(backRight.getDrivePosition(),backRight.getAngle());
+      modulePositions[0] = new SwerveModulePosition(0,frontLeft.getAngle());
+      modulePositions[1] = new SwerveModulePosition(0,frontRight.getAngle());
+      modulePositions[2] = new SwerveModulePosition(0,backLeft.getAngle());
+      modulePositions[3] = new SwerveModulePosition(0,backRight.getAngle());
 
       odometry = new SwerveDriveOdometry(Constants.m_kinematics,gyro.getRotation2d(), modulePositions);
       ResetEncoders();
       resetOdometry(getPose());
-      Unlock();
+      unlock();
   }
 
-  public void zeroHeading() {
-    gyro.reset();
-  }
-
-  public double getHeading() {
-      return Math.IEEEremainder(gyro.getAngle(), 360);
-  }
 
   public Rotation2d getRotation2d() {
       //return Rotation2d.fromDegrees(getHeading());
@@ -112,19 +105,19 @@ public class Drivetrain extends SubsystemBase {
         backLeft.setDesiredState(desiredStates[2]);
         backRight.setDesiredState(desiredStates[3]);
     }
-    public void Zero()
+    public void zero()
     {
         gyro.zeroYaw();
     }
 
-    public void Lock_Motor()
+    public void lock_motor()
     {
         frontRight.Lock();
         frontLeft.Lock();
         backLeft.Lock();
         backRight.Lock();
     }
-    public void Unlock()
+    public void unlock()
     {
         frontLeft.Unlock();
         frontRight.Unlock();
@@ -146,28 +139,5 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
       odometry.update(gyro.getRotation2d(), modulePositions);
-
-      //System.out.println(frontLeft.GetEncoder().get());
-
-//    SmartDashboard.putNumber("Back Right Speed", backRight.getDriveVelocity());
-//    SmartDashboard.putNumber("Back Left Speed", backLeft.getDriveVelocity());
-//    SmartDashboard.putNumber("Front Right Speed", frontRight.getDriveVelocity());
-//    SmartDashboard.putNumber("Front left Speed", frontLeft.getDriveVelocity());
-//
-//    SmartDashboard.putNumber("Back Right Encoder position", backRight.getTurningPosition());
-//    SmartDashboard.putNumber("Back left Encoder position", backLeft.getTurningPosition());
-//    SmartDashboard.putNumber("Front Right Encoder position", frontRight.getTurningPosition());
-//    SmartDashboard.putNumber("Front left Encoder position", frontLeft.getTurningPosition());
-////
-////    SmartDashboard.putNumber("Back Right Encoder target angle", backRight.getAngle());
-////    SmartDashboard.putNumber("Back left Encoder target angle", backLeft.getAngle());
-////    SmartDashboard.putNumber("Front Right Encoder target angle", frontRight.getAngle());
-////    SmartDashboard.putNumber("Front left Encoder target angle", frontLeft.getAngle());
-//
-//    SmartDashboard.putNumber("Back Right target state", backRight.getState().angle.getRadians());
-//    SmartDashboard.putNumber("Back left target state", backLeft.getState().angle.getRadians());
-//    SmartDashboard.putNumber("Front Right target state", frontRight.getState().angle.getRadians());
-//    SmartDashboard.putNumber("Front left target state", frontLeft.getState().angle.getRadians());
-
   }
 }
