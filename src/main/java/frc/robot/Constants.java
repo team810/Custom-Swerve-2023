@@ -21,7 +21,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static  final double MaxSpeed = .75;
+    public static  final double MaxSpeed = .40;
     public static final double MaxTurnSpeed = .75; // deggres per second
     public final class Auto
     {

@@ -10,9 +10,9 @@ import frc.robot.subsystems.Drivetrain;
 
 
 public class RobotContainer {
-  private final Joystick right = new Joystick(0);
-  private final Joystick left = new Joystick(1);
-//  private final XboxController xboxController = new XboxController(0);
+//  private final Joystick right = new Joystick(0);
+//  private final Joystick left = new Joystick(1);
+  private final XboxController xboxController = new XboxController(0);
 
   private final Drivetrain m_drivetrain = new Drivetrain();
 
@@ -20,16 +20,18 @@ public class RobotContainer {
 
     m_drivetrain.setDefaultCommand(new DrivetrainCommand(
             m_drivetrain,
-            () -> Math.pow(right.getY(), 3) * Constants.MaxSpeed, // Y
-            () -> Math.pow(right.getX(), 3) * Constants.MaxSpeed, // X
-            () -> Math.pow(left.getTwist(), 3) * Constants.MaxTurnSpeed, // Z
+            () -> Math.pow(xboxController.getLeftY(), 3) * Constants.MaxSpeed, // Y
+            () -> Math.pow(xboxController.getLeftX(), 3) * Constants.MaxSpeed, // X
+            () -> - Math.pow(xboxController.getRightX(), 3) * Constants.MaxTurnSpeed, // Z
             () -> true
     ));
     configureButtonBindings();
   }
   private void configureButtonBindings() {
-    Trigger left_Trigger = new Trigger(left::getTrigger);
-    Trigger right_Trigger = new Trigger(right::getTrigger);
+    Trigger left_Trigger = new Trigger(xboxController::getAButton);
+    Trigger right_Trigger = new Trigger(xboxController::getBButton);
+
+
 
     left_Trigger.whileTrue(new InstantCommand(m_drivetrain::lock_motor));
     left_Trigger.whileFalse(new InstantCommand(m_drivetrain::unlock));
