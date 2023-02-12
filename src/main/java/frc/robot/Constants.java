@@ -21,12 +21,18 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static  final double MaxSpeed = .25;
+    public static  final double MaxSpeed = .40;
+    public static final double MaxTurnSpeed = .75; // deggres per second
     public final class Auto
     {
         public static final String dir_path = "";
-        public static final double MaxSpeed = 4.5;
-        public static final double TurningSpeed = .5; // How long in seconds it takes to make one turn in place
+        public static final double MaxSpeed = 4;
+        public static final double TurningSpeed = 20; // How long in seconds it takes to make one turn in place
+
+        public final double FieldLength = 15.6;
+        public static final double K_XController = 1;
+        public static final double K_YController = 1;
+        public static final double K_RController = 1;
 
     }
 
@@ -67,7 +73,7 @@ public final class Constants {
     public static final int BACK_LEFT_PORT_1 = 6;
     public static final int BACK_LEFT_PORT_2 = 7;
 
-    public static final double kMaxSpeedMetersPerSecond = 3;
+    public static final double kMaxSpeedMetersPerSecond = .60;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
