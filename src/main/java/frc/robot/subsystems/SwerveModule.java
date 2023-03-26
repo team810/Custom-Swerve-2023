@@ -2,11 +2,12 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.Drivetrain;
+package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -14,22 +15,27 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc.robot.Constants;
+import frc.robot.subsystems.Drivetrain;
 
-/** Add your docs here. */
 public class SwerveModule {
     private int tmp;
-
     private Spark turningMotor;
     private CANSparkMax driveMotor;
 
     // private Encoder turningEncoder;
     private Encoder turningEncoder;
+    private SparkMaxAbsoluteEncoder maxAbsoluteEncoder;
     private RelativeEncoder driveEncoder;
 
     private PIDController turningPidController;
 
-    public SwerveModule(Drivetrain d, int driveChannel, int turnChannel, int channel1, int channel2,
-            boolean driveMotorReversed, boolean turningMotorReversed) {
+    public PIDController GetPIDTurning()
+    {
+        return turningPidController;
+    }
+
+    public SwerveModule( int driveChannel, int turnChannel, int channel1, int channel2,
+                        boolean driveMotorReversed, boolean turningMotorReversed, double EncoderResolution) {
         tmp = 0;
         turningMotor = new Spark(turnChannel);
         driveMotor = new CANSparkMax(driveChannel, MotorType.kBrushless);
@@ -40,26 +46,36 @@ public class SwerveModule {
         resetMotors();
 
         turningEncoder = new Encoder(channel2, channel1);
-        driveEncoder = driveMotor.getEncoder();
+//        driveEncoder = driveMotor.getEncoder();
 
-        driveEncoder.setPositionConversionFactor(
-                Units.inchesToMeters(Constants.CIRCUMFERENCE) / (60.0 * Constants.GEAR_RATIO));
+//        driveEncoder.setPositionConversionFactor(
+//                Units.inchesToMeters(Constants.CIRCUMFERENCE) / (60.0 * Constants.GEAR_RATIO));
         // driveEncoder.setVelocityConversionFactor();
         // turningEncoder.setDistancePerPulse(360 / Constants.kEncoderResolution);
 
-        turningEncoder.setDistancePerPulse(Math.PI * 2.0 / Constants.kEncoderResolution);
+        turningEncoder.setDistancePerPulse(Math.PI * 2.0 / EncoderResolution);
+
+
 
         turningPidController = new PIDController(5, 0, 0);
+
+
         // SASHA'S NOTES: encoder distance will be in radians
         turningPidController.setTolerance(Math.PI * 1.0 / 180);
         turningPidController.enableContinuousInput(-Math.PI, Math.PI);
-
-        resetEncoders();
+    }
+    public void Lock()
+    {
+        driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    }
+    public void Unlock()
+    {
+        driveMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
     }
 
-    public double getDrivePosition() {
-        return driveEncoder.getPosition();
-    }
+//    public double getDrivePosition() {
+//        return driveEncoder.getPosition();
+//    }
 
     public double getDriveVelocity() {
         return driveEncoder.getVelocity();
@@ -85,7 +101,7 @@ public class SwerveModule {
     }
 
     public SwerveModuleState getState() {
-        return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurningPosition()));
+        return new SwerveModuleState(0, new Rotation2d(getTurningPosition()));
     }
 
     public void setDesiredState(SwerveModuleState state) {
@@ -116,11 +132,12 @@ public class SwerveModule {
 
     public void resetEncoders() {
         turningEncoder.reset();
-        driveEncoder.setPosition(0);
+//        driveEncoder.setPosition(0);
     }
 
     private void resetMotors() {
         driveMotor.restoreFactoryDefaults();
         turningMotor.setSafetyEnabled(false);
     }
+
 }
